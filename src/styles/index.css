@@ -29,6 +29,10 @@ body {
   grid-template-columns: repeat(4, 4rem);                 /* Width of rows */
   grid-gap: 0.5rem;
   padding: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .calc--btn-style {
