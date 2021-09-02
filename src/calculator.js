@@ -1,3 +1,5 @@
+import { trimFloat, integerLengthValid, toNumber, isNumber, isInteger, inputLengthValid } from "./utils";
+
 export class Calculator {
 
   constructor() {
@@ -15,7 +17,7 @@ export class Calculator {
 
   
   handleKeyPress(key) {
-    if (this.isNumber(key)) this.handleNumber(key);
+    if (isNumber(key)) this.handleNumber(key);
     if ("/x-+".includes(key)) this.handleOperator(key);
     if (key === ".") this.handleDecimal();
     if (key === "=") this.handleEquals();
@@ -25,11 +27,11 @@ export class Calculator {
   handleNumber(num) {  
     if (this.result) this.handleClear();
       
-    if (!this.operator && this.inputLengthValid(this.operandOne)) {       //Into operandOne
+    if (!this.operator && inputLengthValid(this.operandOne)) {       //operandOne
       this.operandOne += num;
       this.updateScreen(this.operandOne);
     }
-    else if (this.operator && this.inputLengthValid(this.operandTwo)) {   //Into operandTwo
+    else if (this.operator && inputLengthValid(this.operandTwo)) {   //operandTwo
       this.operandTwo += num;
       this.updateScreen(this.operandTwo);
     }
@@ -39,7 +41,7 @@ export class Calculator {
     if (!this.operandTwo) {
       this.operator = operator;
     }
-    else if (this.operandTwo) {              //Chaining
+    else if (this.operandTwo) {              //Chaining     
       this.handleEquals();                   
       this.operandOne = this.result;
       this.operator = operator;
@@ -59,67 +61,43 @@ export class Calculator {
   }
 
   handleDecimal() {
-    
-    //still have to write this
     if (this.result) this.handleClear();
 
-    //if (this.operandOne)
+    if (!this.operator && !this.operandOne.includes(".")) {                 //operandOne
+      this.operandOne ? this.operandOne += "." : this.operandOne = "0.";
+      this.updateScreen(this.operandOne);
+    }
+    else if (this.operator && !this.operandTwo.includes(".")) {             //operandTwo
+      this.operandTwo ? this.operandTwo += "." : this.operandTwo = "0.";
+      this.updateScreen(this.operandTwo);
+    }
+    
   }
 
   handleEquals() {
-    this.debug();
     if (this.operandOne && this.operandTwo) {
-      if (this.operator == "+") this.result = this.toNumber(this.operandOne) + this.toNumber(this.operandTwo);
-      if (this.operator == "-") this.result = this.toNumber(this.operandOne) - this.toNumber(this.operandTwo);
-      if (this.operator == "/") this.result = this.toNumber(this.operandOne) / this.toNumber(this.operandTwo);
-      if (this.operator == "x") this.result = this.toNumber(this.operandOne) * this.toNumber(this.operandTwo);
+      if (this.operator == "+") this.result = toNumber(this.operandOne) + toNumber(this.operandTwo);
+      if (this.operator == "-") this.result = toNumber(this.operandOne) - toNumber(this.operandTwo);
+      if (this.operator == "/") this.result = toNumber(this.operandOne) / toNumber(this.operandTwo);
+      if (this.operator == "x") this.result = toNumber(this.operandOne) * toNumber(this.operandTwo);
     
       this.checkLength();
       this.updateScreen(this.result);   
     }
   }
 
-
-
-  //UTILITY METHODS
   checkLength() {
-    if (this.isInteger(this.result)) {                    
-      if (!this.integerLengthValid(this.result)) this.result = "Error";   //Error if integer is too big
+    if (isInteger(this.result)) {                                    //If integer      
+      if (!integerLengthValid(this.result)) this.result = "Error";   //Error if integer is too big
     }
-    else {                                            
-      if (this.result.toString().includes('e')) {           //Error if result is in exponential notation
+    else {                                                  
+      if (this.result.toString().includes('e')) {           //Error if integer result is in exponential notation
         this.result = "Error";
       } 
       else {
-        this.result = this.trimFloat(this.result);
+        this.result = trimFloat(this.result);
       }       
     }
-  }
-
-  trimFloat(num) {                      
-    num = num.toString();
-    return num.length > 14 ? num.slice(0,14) : num;
-  }
-
-  integerLengthValid(num) {            //For result only
-    num = num.toString();
-    return num.length <= 14;
-  }
-
-  toNumber (num) {     
-    return this.isInteger(num) ? parseInt(num) : parseFloat(num);                       
-  }
-
-  isNumber(num) {
-    return !isNaN(num);
-  }
-
-  isInteger(num) {
-    return Number(parseInt(num)) == num;
-  }
-
-  inputLengthValid(num) {
-    return num.length <= 13;
   }
 
   updateScreen(num) {
@@ -129,6 +107,7 @@ export class Calculator {
 
   debug() {
     console.log("operandOne: " + this.operandOne);
+    console.log("operator: " + this.operator);
     console.log("operandTwo: " + this.operandTwo);
     console.log("result: " + this.result);
   }
@@ -137,8 +116,32 @@ export class Calculator {
 
 
 /*
--handleDecimal()
--Need to deal with divide by zero
+REFACTORING TO-DO
+-Move Utility functions to a separate file
+
+WRITE TESTS
+
+
+
+
+
+README.md FILE
+
+OVERVIEW
+-Fairly simple calculator app. HTML, CSS, and Vanilla Javascript. Webpack for bundling. Jest for testing.
+
+CALCULATOR FEATURES
+-Chaining
+-Length limits for integers and floating point
+
+
+
+
+
+
+
+
+
 
 Number is a 64-bit floating point number
 Highest - 9,007,199,254,740,991
