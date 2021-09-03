@@ -15,7 +15,6 @@ export class Calculator {
     });
   } 
 
-  
   handleKeyPress(key) {
     if (isNumber(key)) this.handleNumber(key);
     if ("/x-+".includes(key)) this.handleOperator(key);
@@ -81,12 +80,12 @@ export class Calculator {
       if (this.operator == "/") this.result = toNumber(this.operandOne) / toNumber(this.operandTwo);
       if (this.operator == "x") this.result = toNumber(this.operandOne) * toNumber(this.operandTwo);
     
-      this.checkLength();
+      this.checkResultLength();
       this.updateScreen(this.result);   
     }
   }
 
-  checkLength() {
+  checkResultLength() {
     if (isInteger(this.result)) {                                    //If integer      
       if (!integerLengthValid(this.result)) this.result = "Error";   //Error if integer is too big
     }
@@ -116,13 +115,8 @@ export class Calculator {
 
 
 /*
-REFACTORING TO-DO
--Move Utility functions to a separate file
-
-WRITE TESTS
-
-
-
+-Move Google fonts link
+-WRITE TESTS
 
 
 README.md FILE
@@ -135,6 +129,10 @@ CALCULATOR FEATURES
 -Length limits for integers and floating point
 
 
+-Different refactoring
+ -Keep functions
+ -But the Eventlistener goes into index.js with the Calculator Instance.
+  -Call handleKeyPress from EventListener.
 
 
 
