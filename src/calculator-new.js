@@ -15,6 +15,8 @@ export class Calculator {
     });
   } 
 
+  //----------------------KEY METHODS----------------------//
+
   handleKeyPress(key) {
     if (isNumber(key)) this.handleNumber(key);
     if ("/x-+".includes(key)) this.handleOperator(key);
@@ -37,12 +39,8 @@ export class Calculator {
     if (!this.operandTwo.data) {
       this.updateOperator(operator);
     }
-    else if (this.operandTwo.data) {                  //chaining
-      this.handleEquals();
-      let value = this.result;
-      this.handleClear();
-      this.updateOperand(this.selectOperand(), value);
-      this.updateOperator(operator);
+    else if (this.operandTwo.data) {                  
+      this.chainResult(operator);
     }
   }
 
@@ -51,7 +49,7 @@ export class Calculator {
     let operand = this.selectOperand();
     if (!operand.data.includes(".")) {
       let value = "";                                                     
-      operand.data ? value = operand.data += "." : value = ".";           //this could use a small rewrite
+      value = operand.data ? operand.data += "." : "0.";          
       this.updateOperand(operand, value);
     }
   }
@@ -72,6 +70,20 @@ export class Calculator {
     this.updateScreen("0");
   }
 
+  //----------------------HELPERS----------------------//
+
+  selectOperand() {
+    return !this.operator ? this.operandOne : this.operandTwo;
+  }
+
+  chainResult(operator) {
+    this.handleEquals();
+    let value = this.result;
+    this.handleClear();
+    this.updateOperand(this.selectOperand(), value);
+    this.updateOperator(operator);
+  }
+
   evaluate() {
     let value = 0;
     if (this.operator == "+") value = toNumber(this.operandOne.data) + toNumber(this.operandTwo.data);
@@ -81,36 +93,13 @@ export class Calculator {
     return value;
   }
 
-
-
-
-  checkResultLength(value) {                //NEEDS A SMALL REWRITE
+  checkResultLength(value) {                
     if (isInteger(value)) {
-      // !integerLengthValid(value) ? return "Error" : return value;
-      if (!integerLengthValid(value)) {
-        return "Error"
-      }
-      else {
-        return value;
-      }
+      return !integerLengthValid(value) ? "Error" : value;                //Integer too big?
     }
     else {
-      if (value.toString().includes('e')) {
-        return "Error";
-      }
-      else {
-        return trimFloat(value);
-      }
+      return value.toString().includes('e') ? "Error" : trimFloat(value); //Trim floating point?
     }
-
-  }
-
-
-
-
-
-  selectOperand() {
-    return !this.operator ? this.operandOne : this.operandTwo;
   }
 
   debug() {
@@ -120,7 +109,7 @@ export class Calculator {
     console.log("result: " + this.result.data);
   }
 
-  //----------------------UPDATE METHODS------------------------------//
+  //----------------------UPDATE METHODS----------------------//
 
   updateOperand(operand, num) {
     operand.data = num;
@@ -144,9 +133,7 @@ export class Calculator {
 
 
 /*
--checkResultLength needs to be refactored
--Move chaining to its own method
--handleDecimal needs a small rewrite
+
 -WRITE TESTS
 -Move Google fonts link
 -Write README.md FILE
@@ -161,18 +148,11 @@ OVERVIEW
 -Jest for testing
 
 OTHER NOTES
--I'm using objects for operandOne and operandTwo, because it's easier to
-pass around a reference, instead of writing the same code twice
-only with different variables.
+-By using objects for operandOne and operandTwo, I can 
+pass around a reference, and avoid writing the same code
+twice with different variables.
 -You can chain - Ex. 5 x 5 x 5 x 5
--All methods are pure except the update functions
-
-
-
-CALCULATOR FEATURES
--Chaining
--Length limits for integers and floating point
-
+-Only update functions change state.
 
 
 Number is a 64-bit floating point number
