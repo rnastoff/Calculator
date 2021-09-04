@@ -1,12 +1,17 @@
-const Calculator = require('../calculator');
+const fs = require("fs");
+console.log(process.cwd());
+window.document.body.innerHTML = fs.readFileSync("./src/index.html");
+
+const { Calculator } = require('../calculator-new');
 
 
-describe("Calculator Methods", () => {
+describe("Calculator Key Methods", () => {
   
-  test("should call handleNumber with number 5", () => {
+  test("handleKeyPress should call handleNumber with argument 5", () => {
     const calc = new Calculator();
-    calc.handleKeyPress("5");
-
+    calc.handleNumber = jest.fn(); 
+    calc.handleKeyPress(5);   
+    expect(calc.handleNumber).toHaveBeenCalledWith(5);
   });
 
 });
@@ -15,20 +20,9 @@ describe("Calculator Methods", () => {
 
 
 
+// describe("Utility functions", () => {
 
-
-
-
-test('', () => {
-//expect().toBe();
-});
-
-
-
-
-describe("Utility functions", () => {
-
-});
+// });
 
 
 /*
