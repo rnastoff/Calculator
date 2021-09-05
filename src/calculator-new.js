@@ -49,7 +49,7 @@ export class Calculator {
     let operand = this.selectOperand();
     if (!operand.data.includes(".")) {
       let value = "";                                                     
-      value = operand.data ? operand.data += "." : "0.";          
+      value = operand.data ? operand.data += "." : "0.";    //change += to + ?      
       this.updateOperand(operand, value);
     }
   }
