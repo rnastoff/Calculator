@@ -42,6 +42,8 @@ describe("handleKeyPress", () => {
 
 });
 
+//DON'T NEED TO TEST EVERY LITTLE BEHAVIOR IN THE METHOD
+//ONLY NEED TO TEST THE RESULTS OF THE METHOD
 
 describe("handleNumber", () => {
   let calc;
@@ -49,34 +51,19 @@ describe("handleNumber", () => {
     calc = new Calculator();
   });
 
-  test("should assign operandOne value of '5'", () => {
-    calc.handleNumber(5);
-    expect(calc.operandOne.data).toBe("5")
-  });
-
-  test("should assign operandTwo value of '7'", () => {
-    calc.operator = "x";
-    calc.handleNumber(7);
-    expect(calc.operandTwo.data).toBe("7");
-  });
-
-  test("should assign operandOne value of '57'", () => {
-    calc.operandOne.data += 5;
-    calc.handleNumber(7);
-    expect(calc.operandOne.data).toBe("57");
-  });
-
-  test("should not concat any more numbers to operandOne", () => {
-    calc.operandOne.data += "9999999999999999";
-    calc.handleNumber(1);
-    expect(calc.operandOne.data).toBe("9999999999999999");
-  });
-
-  test("should call updateOperand", () => {
+  test("should call updateOperand with argument '5'", () => {
     calc.updateOperand = jest.fn();
     calc.handleNumber(5);
     expect(calc.updateOperand).toHaveBeenCalledWith({ data: "" }, "5");
   });
+
+  test("should not call updateOperand if input is too long", () => {
+    calc.updateOperand = jest.fn();
+    calc.operandOne.data = "999999999999999";
+    calc.handleNumber(5);
+    expect(calc.updateOperand).not.toHaveBeenCalled();
+  });
+
 });
 
 describe("handleOperator", () => {
@@ -97,6 +84,68 @@ describe("handleOperator", () => {
     calc.handleOperator("+");
     expect(calc.chainResult).toHaveBeenCalledWith("+");
   });
+
+});
+
+describe("handleDecimal", () => {
+  let calc;
+  beforeEach(() => {
+    calc = new Calculator();
+  });
+
+  test("should call updateOperand with argument '0.'", () => {
+    calc.updateOperand = jest.fn();
+    calc.handleDecimal();
+    expect(calc.updateOperand).toHaveBeenCalledWith({data: ""}, "0.");
+  });
+
+  test("should call updateOperand with argument '.'", () => {
+    calc.updateOperand = jest.fn();
+    calc.operandOne.data = "5";
+    calc.handleDecimal();
+    expect(calc.updateOperand).toHaveBeenCalledWith({data: "5"}, "5.");
+  });
+});
+
+describe("handleEquals", () => {
+  let calc;
+  beforeEach(() => {
+    calc = new Calculator();
+  });
+
+  test("should add two numbers and return 12", () => {
+    calc.updateResult = jest.fn();
+    calc.operandOne.data = 5;
+    calc.operandTwo.data = 7;
+    calc.operator = "+";
+    calc.handleEquals();
+    expect(calc.updateResult).toHaveBeenCalledWith(12);
+  });
+
+});
+
+describe("handleClear", () => {
+  let calc;
+  beforeEach(() => {
+    calc = new Calculator();
+  });
+
+  test("should call updateScreen with arguement '0'", () => {
+    calc.updateScreen = jest.fn();
+    calc.handleClear();
+    expect(calc.updateScreen).toHaveBeenCalledWith('0');
+  });
+});
+
+
+describe("Helper Methods", () => {
+  let calc;
+  beforeEach(() => {
+    calc = new Calculator();
+  });
+
+  
+
 
 });
 
@@ -135,24 +184,4 @@ describe("handleOperator", () => {
   test("handleClear() should...", () => {
     //For "." and "0."
   });
-*/
-
-
-
-
-
-
-
-
-// describe("Utility functions", () => {
-
-// });
-
-
-/*
-const stub = jest.fn();
-stub();
-expect(stub).toBeCalled
-
-
 */
