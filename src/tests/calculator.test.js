@@ -3,6 +3,8 @@ console.log(process.cwd());
 window.document.body.innerHTML = fs.readFileSync("./src/index.html");
 
 const { Calculator } = require('../calculator-new');
+import { trimFloat, integerLengthValid, toNumber, isNumber, isInteger, inputLengthValid } from "../utils";
+
 
 describe("handleKeyPress", () => {
   let calc;
@@ -113,7 +115,7 @@ describe("handleEquals", () => {
     calc = new Calculator();
   });
 
-  test("should add two numbers and return 12", () => {
+  test("should add 5 and 7 and return 12", () => {
     calc.updateResult = jest.fn();
     calc.operandOne.data = 5;
     calc.operandTwo.data = 7;
@@ -130,7 +132,7 @@ describe("handleClear", () => {
     calc = new Calculator();
   });
 
-  test("should call updateScreen with arguement '0'", () => {
+  test("should call updateScreen with argument '0'", () => {
     calc.updateScreen = jest.fn();
     calc.handleClear();
     expect(calc.updateScreen).toHaveBeenCalledWith('0');
@@ -144,44 +146,148 @@ describe("Helper Methods", () => {
     calc = new Calculator();
   });
 
-  
+  test("should return operandOne", () => {
+    let op = calc.selectOperand();
+    expect(op).toEqual(calc.operandOne);
+  });
 
+  test("should return operandTwo", () => {
+    calc.operator = "+";
+    let op = calc.selectOperand();
+    expect(op).toEqual(calc.operandTwo);
+  });
 
+  test("should call updateOperand", () => {
+    calc.updateOperand = jest.fn();
+    calc.operandOne.data = "5";
+    calc.operator = "+";
+    calc.operandTwo.data = "7";
+    calc.chainResult("+");
+    expect(calc.updateOperand).toHaveBeenCalledWith({data: ""}, 12);
+  });
+
+  test("should call updateOperator", () => {
+    calc.updateOperator = jest.fn();
+    calc.chainResult("+");
+    expect(calc.updateOperator).toHaveBeenCalledWith("+");
+  });
+
+  test("should return addition result 12", () => {
+    calc.operandOne.data = 5;
+    calc.operator = "+";
+    calc.operandTwo.data = 7;
+    let result = calc.evaluate()
+    expect(result).toBe(12);
+  });
+
+  test("should return 'Error' for integer too big", () => {
+    let result = calc.checkResultLength(999999999999999);
+    expect(result).toBe("Error");
+  });
+
+  test("should return Error for Exponential Notation", () => {
+    let result = calc.checkResultLength(9.9999e+22);
+    expect(result).toBe("Error");
+  });
+
+  test("should return trimmed float", () => {
+    let result = calc.checkResultLength(5.1234567890123);
+    expect(result).toBe("5.123456789012");
+  });
 });
 
 
-
-
-/*
-  test("handleNumber() should...", () => {
-    //For each operand
+describe("Update Methods", () => {
+  let calc;
+  beforeEach(() => {
+    calc = new Calculator();
   });
 
-  test("handleNumber() should...", () => {
-    //For each operand
+  test("updateOperand should call updateScreen", () => {
+    calc.updateScreen = jest.fn();
+    calc.updateOperand({data: ""}, "5");
+    expect(calc.updateScreen).toHaveBeenCalledWith("5");
   });
 
-  test("handleOperator() should...", () => {
-    //For operator
+  test("should update operator", () => {
+    calc.updateOperator("+");
+    expect(calc.operator).toBe("+");
   });
 
-  test("handleOperator() should...", () => {
-    //For operator chaining
+  test("updateResult should call updateScreen", () => {
+    calc.updateScreen = jest.fn();
+    calc.updateResult("5");
+    expect(calc.updateScreen).toHaveBeenCalledWith("5");
   });
 
-  test("handleDecimal() should...", () => {
-    //For each operand
+  test("should update screen", () => {
+    calc.updateScreen("5");
+    let result = document.querySelector(".calc__screen").textContent;
+    expect(result).toBe("5");
+  });
+});
+
+
+describe("Utility functions", () => {
+
+  test("trimFloat should trim floating point number", () => {
+    let result = trimFloat(5.1234567890123);
+    expect(result).toBe("5.123456789012");
   });
 
-  test("handleDecimal() should...", () => {
-    //For "." and "0."
+  test("trimFloat should not trim floating point number", () => {
+    let result = trimFloat(5.123456789012);
+    expect(result).toBe("5.123456789012");
   });
 
-  test("handleEquals() should...", () => {
-    //Hmmm...
+  test("integerLengthValid should return true", () => {
+    let result = integerLengthValid(5);
+    expect(result).toBe(true);
   });
 
-  test("handleClear() should...", () => {
-    //For "." and "0."
+  test("integerLengthValid should return false", () => {
+    let result = integerLengthValid(555555555555555);
+    expect(result).toBe(false);
   });
-*/
+
+  test("toNumber should return integer", () => {
+    let result = toNumber("5");
+    expect(result).toBe(5);
+  });
+
+  test("should return a floating point number", () => {
+    let result = toNumber("5.5");
+    expect(result).toBe(5.5);
+  });
+
+  test("isNumber should return true", () => {
+    let result = isNumber(5);
+    expect(result).toBe(true);
+  });
+
+  test("isNumber should return false", () => {
+    let result = isNumber("a");
+    expect(result).toBe(false);
+  });
+
+  test("isInteger should return true", () => {
+    let result = isInteger("5");
+    expect(result).toBe(true);
+  });
+
+  test("isInteger should return false", () => {
+    let result = isInteger("5.5");
+    expect(result).toBe(false);
+  });
+
+  test("inputLengthValid should return true", () => {
+    let result = inputLengthValid("5212345678901")
+    expect(result).toBe(true);
+  });
+
+  test("inputLengthValid should return false", () => {
+    let result = inputLengthValid("52123456789012")
+    expect(result).toBe(false);
+  });
+
+});

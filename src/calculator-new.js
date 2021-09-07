@@ -19,7 +19,7 @@ export class Calculator {
 
   handleKeyPress(key) {
     if (isNumber(key)) this.handleNumber(key);
-    if ("/x-+".includes(key)) this.handleOperator(key);
+    if (/[-+x\/]/.test(key)) this.handleOperator(key); //if ("/x-+".includes(key)) this.handleOperator(key);
     if (key === ".") this.handleDecimal();
     if (key === "=") this.handleEquals();
     if (key === "CE") this.handleClear();
@@ -70,7 +70,7 @@ export class Calculator {
     this.updateScreen("0");
   }
 
-  //----------------------HELPERS----------------------//
+  //----------------------HELPER METHODS----------------------//
 
   selectOperand() {
     return !this.operator ? this.operandOne : this.operandTwo;
@@ -80,7 +80,7 @@ export class Calculator {
     this.handleEquals();
     let value = this.result;
     this.handleClear();
-    this.updateOperand(this.selectOperand(), value);
+    this.updateOperand(this.operandOne, value); //changed
     this.updateOperator(operator);
   }
 
@@ -109,7 +109,7 @@ export class Calculator {
     console.log("result: " + this.result.data);
   }
 
-  //----------------------UPDATE METHODS----------------------//
+  //----------------------UPDATE FUNCTIONS----------------------//
 
   updateOperand(operand, num) {
     operand.data = num;
@@ -135,6 +135,7 @@ export class Calculator {
 /*
 
 -WRITE TESTS
+-Replace handleKeyPress +-/x with regex
 -Move Google fonts link
 -Write README.md FILE
 -Use images inside readme
@@ -142,7 +143,7 @@ export class Calculator {
 CALCULATOR
 
 OVERVIEW
--Fairly simple calculator app. 
+-Simple calculator app. 
 -HTML, CSS, and Vanilla Javascript 
 -Webpack for bundling
 -Jest for testing
