@@ -1,4 +1,3 @@
-import "./styles/fonts.css";
 import "normalize.css";
 import "./styles/index.css";
 
