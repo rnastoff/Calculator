@@ -19,7 +19,7 @@ export class Calculator {
 
   handleKeyPress(key) {
     if (isNumber(key)) this.handleNumber(key);
-    if (/[-+x\/]/.test(key)) this.handleOperator(key); //if ("/x-+".includes(key)) this.handleOperator(key);
+    if (/[-+x\/]/.test(key)) this.handleOperator(key); 
     if (key === ".") this.handleDecimal();
     if (key === "=") this.handleEquals();
     if (key === "CE") this.handleClear();
@@ -135,9 +135,7 @@ export class Calculator {
 /*
 
 -WRITE TESTS
--Replace handleKeyPress +-/x with regex
 -Move Google fonts link
--Write README.md FILE
 -Use images inside readme
 
 CALCULATOR
