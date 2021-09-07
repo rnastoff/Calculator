@@ -112,37 +112,3 @@ export class Calculator {
   }
 
 }
-
-
-/*
--Move Google fonts link
--WRITE TESTS
-
-
-README.md FILE
-
-OVERVIEW
--Fairly simple calculator app. HTML, CSS, and Vanilla Javascript. Webpack for bundling. Jest for testing.
-
-CALCULATOR FEATURES
--Chaining
--Length limits for integers and floating point
-
-
--Different refactoring
- -Keep functions
- -But the Eventlistener goes into index.js with the Calculator Instance.
-  -Call handleKeyPress from EventListener.
-
-
-
-
-
-
-
-
-Number is a 64-bit floating point number
-Highest - 9,007,199,254,740,991
-
-
-*/
