@@ -2,7 +2,7 @@ const fs = require("fs");
 console.log(process.cwd());
 window.document.body.innerHTML = fs.readFileSync("./src/index.html");
 
-const { Calculator } = require('../calculator-new');
+const { Calculator } = require('../calculator');
 import { trimFloat, integerLengthValid, toNumber, isNumber, isInteger, inputLengthValid } from "../utils";
 
 
@@ -43,9 +43,6 @@ describe("handleKeyPress", () => {
   });
 
 });
-
-//DON'T NEED TO TEST EVERY LITTLE BEHAVIOR IN THE METHOD
-//ONLY NEED TO TEST THE RESULTS OF THE METHOD
 
 describe("handleNumber", () => {
   let calc;
